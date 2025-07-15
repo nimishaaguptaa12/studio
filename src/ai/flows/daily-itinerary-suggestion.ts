@@ -44,7 +44,7 @@ const prompt = ai.definePrompt({
 
 The user has the following preferences: {{{preferences}}}.
 
-The daily budget is ${{{budget}}} USD. Make sure the estimatedCost for each day is within the budget.
+The daily budget is \${{{budget}}} USD. Make sure the estimatedCost for each day is within the budget.
 
 Return the itinerary as a JSON object.
 `,
