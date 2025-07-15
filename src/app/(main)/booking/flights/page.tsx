@@ -28,7 +28,7 @@ export default function BookFlightsPage() {
         </CardHeader>
         <CardContent>
           <Image
-            src="https://placehold.co/800x400.png/E2E8F0/E2E8F0"
+            src="https://placehold.co/800x400.png"
             data-ai-hint="airplane travel"
             alt="Airplane flying over clouds"
             width={800}

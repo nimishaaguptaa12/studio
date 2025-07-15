@@ -24,11 +24,11 @@ export default function BookHotelsPage() {
           <CardDescription>
             Find the perfect place to stay for your trip. We partner with
             Google Travel to help you find the best accommodations.
-          </CardDescription>
+          </-CardDescription>
         </CardHeader>
         <CardContent>
           <Image
-            src="https://placehold.co/800x400.png/E2E8F0/E2E8F0"
+            src="https://placehold.co/800x400.png"
             data-ai-hint="hotel luxury"
             alt="Modern hotel room with a view"
             width={800}
