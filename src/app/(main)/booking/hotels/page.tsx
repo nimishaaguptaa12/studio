@@ -24,7 +24,7 @@ export default function BookHotelsPage() {
           <CardDescription>
             Find the perfect place to stay for your trip. We partner with
             Google Travel to help you find the best accommodations.
-          </-CardDescription>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Image
