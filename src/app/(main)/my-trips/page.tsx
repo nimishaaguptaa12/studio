@@ -60,9 +60,9 @@ export default function MyTripsPage() {
                   className="rounded-lg border bg-card"
                 >
                   <AccordionTrigger className="p-4 hover:no-underline">
-                    <div className="flex w-full items-center justify-between">
-                      <div className="text-left">
-                        <p className="text-lg font-semibold">{trip.destination}</p>
+                    <div className="flex w-full items-center justify-between gap-4">
+                      <div className="text-left flex-1 min-w-0">
+                        <p className="text-lg font-semibold truncate">{trip.destination}</p>
                         <p className="text-sm text-muted-foreground">
                           {trip.duration} days, created on{" "}
                           {new Date(trip.createdAt).toLocaleDateString()}
