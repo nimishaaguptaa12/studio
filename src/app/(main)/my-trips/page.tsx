@@ -2,7 +2,7 @@
 "use client";
 
 import useLocalStorage from "@/hooks/use-local-storage";
-import type { SavedTrip, ChecklistItem } from "@/types";
+import type { SavedTrip } from "@/types";
 import {
   Accordion,
   AccordionContent,
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2, Bookmark, CalendarDays, ListChecks } from "lucide-react";
+import { Trash2, Bookmark, CalendarDays, ListChecks, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
@@ -51,6 +51,54 @@ export default function MyTripsPage() {
     });
     setSavedTrips(updatedTrips);
   };
+  
+  const handleShareTrip = async (trip: SavedTrip) => {
+    const tripUrl = `${window.location.origin}/itinerary?destination=${encodeURIComponent(trip.destination)}`;
+    const shareTitle = `My Trip to ${trip.destination}`;
+    let shareText = `Check out my upcoming ${trip.duration}-day trip to ${trip.destination}!\n\n`;
+    shareText += `View the full plan here: ${tripUrl}\n\n`;
+    shareText += 'Itinerary:\n';
+    trip.itinerary.forEach(day => {
+        shareText += `Day ${day.day}:\n`;
+        day.activities.forEach(activity => {
+            shareText += `- ${activity}\n`;
+        });
+    });
+
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: shareTitle,
+                text: shareText,
+                url: tripUrl,
+            });
+            toast({ title: "Trip shared successfully!" });
+        } catch (error) {
+            console.error("Error sharing trip:", error);
+            toast({
+                title: "Could not share trip",
+                description: "There was an error trying to share your trip.",
+                variant: "destructive"
+            });
+        }
+    } else {
+        try {
+            await navigator.clipboard.writeText(shareText);
+            toast({
+                title: "Copied to Clipboard",
+                description: "Trip details have been copied to your clipboard.",
+            });
+        } catch (error) {
+            console.error("Error copying to clipboard:", error);
+            toast({
+                title: "Could not copy trip",
+                description: "There was an error trying to copy your trip details.",
+                variant: "destructive"
+            });
+        }
+    }
+  }
+
 
   const sortedTrips = [...savedTrips].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -144,14 +192,22 @@ export default function MyTripsPage() {
                         </TabsContent>
                     </Tabs>
                     
-                    <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeleteTrip(trip.id)}
-                        className="mt-4"
-                    >
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete Trip
-                    </Button>
+                    <div className="flex items-center gap-2 mt-4">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleShareTrip(trip)}
+                        >
+                            <Share2 className="mr-2 h-4 w-4" /> Share Trip
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeleteTrip(trip.id)}
+                        >
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete Trip
+                        </Button>
+                    </div>
 
                   </AccordionContent>
                 </AccordionItem>
