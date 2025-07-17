@@ -5,6 +5,12 @@ export interface ItineraryDay {
   estimatedCost: number;
 }
 
+export type ChecklistItem = {
+    id: number;
+    text: string;
+    completed: boolean;
+};
+
 export interface SavedTrip {
   id: string; // e.g., a timestamp or a unique hash
   destination: string;
@@ -12,5 +18,6 @@ export interface SavedTrip {
   preferences: string;
   budget: number;
   itinerary: ItineraryDay[];
+  checklist: ChecklistItem[];
   createdAt: string;
 }

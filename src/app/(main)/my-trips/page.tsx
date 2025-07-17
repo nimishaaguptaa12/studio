@@ -2,7 +2,7 @@
 "use client";
 
 import useLocalStorage from "@/hooks/use-local-storage";
-import type { SavedTrip } from "@/types";
+import type { SavedTrip, ChecklistItem } from "@/types";
 import {
   Accordion,
   AccordionContent,
@@ -17,7 +17,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Trash2, Bookmark } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Trash2, Bookmark, CalendarDays, ListChecks } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
@@ -34,6 +36,22 @@ export default function MyTripsPage() {
     });
   };
 
+  const handleChecklistItemToggle = (tripId: string, itemId: number) => {
+    const updatedTrips = savedTrips.map(trip => {
+        if (trip.id === tripId) {
+            const updatedChecklist = trip.checklist.map(item => {
+                if (item.id === itemId) {
+                    return { ...item, completed: !item.completed };
+                }
+                return item;
+            });
+            return { ...trip, checklist: updatedChecklist };
+        }
+        return trip;
+    });
+    setSavedTrips(updatedTrips);
+  };
+
   const sortedTrips = [...savedTrips].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
@@ -47,7 +65,7 @@ export default function MyTripsPage() {
             My Saved Trips
           </CardTitle>
           <CardDescription>
-            Here are all the itineraries you've saved.
+            Here are all the itineraries and checklists you've saved.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -71,28 +89,70 @@ export default function MyTripsPage() {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="p-4 pt-0">
-                    <div className="space-y-4">
-                      {trip.itinerary.map((day) => (
-                        <div key={day.day} className="rounded-md border p-3">
-                          <p className="font-semibold">
-                            Day {day.day} (Est. ₹{day.estimatedCost.toLocaleString('en-IN')})
-                          </p>
-                          <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
-                            {day.activities.map((activity, i) => (
-                              <li key={i}>{activity}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                      <Button
+                    <Tabs defaultValue="itinerary" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 mb-4">
+                            <TabsTrigger value="itinerary">
+                               <CalendarDays className="mr-2 h-4 w-4" /> Itinerary
+                            </TabsTrigger>
+                            <TabsTrigger value="checklist">
+                                <ListChecks className="mr-2 h-4 w-4" /> Checklist
+                            </TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="itinerary">
+                           <div className="space-y-4">
+                              {trip.itinerary.map((day) => (
+                                <div key={day.day} className="rounded-md border p-3">
+                                  <p className="font-semibold">
+                                    Day {day.day} (Est. ₹{day.estimatedCost.toLocaleString('en-IN')})
+                                  </p>
+                                  <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+                                    {day.activities.map((activity, i) => (
+                                      <li key={i}>{activity}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="checklist">
+                            <div className="space-y-2">
+                                {trip.checklist && trip.checklist.length > 0 ? (
+                                    trip.checklist.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="flex items-center gap-3 rounded-md border p-3 transition-colors hover:bg-muted/50"
+                                        >
+                                            <Checkbox
+                                                id={`trip-${trip.id}-item-${item.id}`}
+                                                checked={item.completed}
+                                                onCheckedChange={() => handleChecklistItemToggle(trip.id, item.id)}
+                                            />
+                                            <label
+                                                htmlFor={`trip-${trip.id}-item-${item.id}`}
+                                                className={`flex-1 cursor-pointer ${
+                                                item.completed ? "text-muted-foreground line-through" : ""
+                                                }`}
+                                            >
+                                                {item.text}
+                                            </label>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-center text-muted-foreground py-4">No checklist was saved for this trip.</p>
+                                )}
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                    
+                    <Button
                         variant="destructive"
                         size="sm"
                         onClick={() => handleDeleteTrip(trip.id)}
                         className="mt-4"
-                      >
+                    >
                         <Trash2 className="mr-2 h-4 w-4" /> Delete Trip
-                      </Button>
-                    </div>
+                    </Button>
+
                   </AccordionContent>
                 </AccordionItem>
               ))}
@@ -103,7 +163,7 @@ export default function MyTripsPage() {
               <p className="mt-2 text-muted-foreground">
                 Start by finding a destination and planning your itinerary.
               </p>
-              <Link href="/">
+              <Link href="/destinations">
                 <Button className="mt-4">Find a Destination</Button>
               </Link>
             </div>

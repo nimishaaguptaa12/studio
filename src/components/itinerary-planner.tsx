@@ -33,7 +33,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import useLocalStorage from "@/hooks/use-local-storage";
-import type { ItineraryDay, SavedTrip } from "@/types";
+import type { ItineraryDay, SavedTrip, ChecklistItem } from "@/types";
 import { Bookmark, Sparkles } from "lucide-react";
 
 const formSchema = z.object({
@@ -87,10 +87,22 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
   const handleSaveTrip = () => {
     if (!itinerary) return;
 
+    const checklistKey = `tripChecklist-${destination}`;
+    let checklist: ChecklistItem[] = [];
+    try {
+      const storedChecklist = localStorage.getItem(checklistKey);
+      if (storedChecklist) {
+        checklist = JSON.parse(storedChecklist);
+      }
+    } catch (error) {
+        console.error("Could not read checklist from localStorage", error);
+    }
+
     const newTrip: SavedTrip = {
       id: new Date().toISOString(),
       destination,
       itinerary,
+      checklist,
       ...form.getValues(),
       createdAt: new Date().toISOString(),
     };
