@@ -24,11 +24,11 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  // This is to allow the Next.js dev server to accept requests from the
+  // Firebase Studio preview URL.
   experimental: {
-    // This is to allow the Next.js dev server to accept requests from the
-    // Firebase Studio preview URL.
-    allowedDevOrigins: ['https://*.cloudworkstations.dev'],
   },
+  allowedDevOrigins: ['https://*.cloudworkstations.dev'],
 };
 
 export default nextConfig;
