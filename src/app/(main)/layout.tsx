@@ -80,13 +80,13 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:hidden">
-          <SidebarTrigger />
+        <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm md:hidden">
           <div className="flex items-center gap-2">
             <Link href="/">
               <h1 className="text-xl font-bold">RoamReady</h1>
             </Link>
           </div>
+          <SidebarTrigger />
         </header>
         <main className="flex-1 overflow-auto p-4 md:p-8">{children}</main>
       </SidebarInset>

@@ -59,7 +59,7 @@ export default function LandingPage() {
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             Stop researching, start exploring. RoamReady is the smart travel planner that creates personalized itineraries and helps you discover your next adventure.
           </p>
-          <div className="space-x-4">
+          <div className="mt-4 flex gap-4">
             <Button asChild size="lg">
               <Link href="/destinations">
                 Plan Your Trip Now <ArrowRight className="ml-2 h-5 w-5" />
@@ -70,7 +70,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container space-y-6 py-8 md:py-12 lg:py-24">
+      <section id="features" className="container space-y-8 py-8 md:py-12 lg:py-24">
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <h2 className="text-3xl font-bold leading-[1.1] sm:text-3xl md:text-5xl">
             How It Works
@@ -79,7 +79,7 @@ export default function LandingPage() {
             Planning your next journey is as simple as 1-2-3.
           </p>
         </div>
-        <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
+        <div className="grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3 mx-auto">
           {features.map((feature, index) => (
             <Card key={index} className="flex flex-col items-center p-6 text-center">
               <div className="mb-4 text-primary">{feature.icon}</div>
@@ -91,9 +91,8 @@ export default function LandingPage() {
       </section>
       
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-8 md:py-12 lg:py-24">
-        <div className="container">
-          <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+      <section id="testimonials" className="container py-8 md:py-12 lg:py-24">
+        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
              <h2 className="text-3xl font-bold leading-[1.1] sm:text-3xl md:text-5xl">
               Loved by Travelers
             </h2>
@@ -122,7 +121,6 @@ export default function LandingPage() {
               </Card>
             ))}
           </div>
-        </div>
       </section>
 
       {/* CTA Section */}
