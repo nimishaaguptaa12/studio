@@ -51,7 +51,7 @@ export default function LandingPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="flex min-h-[calc(100vh-10rem)] items-center py-16 md:py-24 lg:py-32">
+      <section className="flex min-h-[calc(100vh-10rem)] items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Your Perfect Trip, <span className="text-primary">Planned by AI</span>
