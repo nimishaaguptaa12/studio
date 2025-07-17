@@ -1,7 +1,7 @@
 // src/components/food-finder.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -41,6 +41,7 @@ type FoodFinderProps = {
 export function FoodFinder({ destination }: FoodFinderProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useLocalStorage<RestaurantSuggestion[] | null>(`foodSuggestions-${destination}`, null);
+  const [hasSearched, setHasSearched] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -52,6 +53,7 @@ export function FoodFinder({ destination }: FoodFinderProps) {
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
+    setHasSearched(true);
     setSuggestions(null);
     try {
       const result = await suggestCafeRestaurant({
@@ -70,6 +72,14 @@ export function FoodFinder({ destination }: FoodFinderProps) {
       setIsLoading(false);
     }
   }
+
+  // Clear suggestions when destination changes
+  useEffect(() => {
+    setSuggestions(null);
+    setHasSearched(false);
+    form.reset();
+  }, [destination, setSuggestions, form]);
+
 
   return (
     <Card>
@@ -105,7 +115,7 @@ export function FoodFinder({ destination }: FoodFinderProps) {
           </form>
         </Form>
         
-        {(isLoading || suggestions) && (
+        {(isLoading || (hasSearched && suggestions)) && (
             <div className="mt-6">
             <h3 className="text-xl font-bold mb-4">Recommendations</h3>
              {isLoading ? (
@@ -122,23 +132,24 @@ export function FoodFinder({ destination }: FoodFinderProps) {
                 </div>
                 ) : (
                 <div className="space-y-3">
-                    {suggestions?.map((suggestion, i) => (
-                       <a
-                        key={i}
-                        href={`https://www.google.com/search?q=${encodeURIComponent(`${suggestion.name}, ${destination}`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-4 rounded-md border p-3 transition-colors hover:bg-muted/50"
-                       >
-                         <UtensilsCrossed className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                         <div className="flex-grow">
-                            <p className="font-semibold">{suggestion.name}</p>
-                            <p className="text-sm text-muted-foreground">{suggestion.description}</p>
-                         </div>
-                         <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                       </a>
-                    ))}
-                    {suggestions?.length === 0 && (
+                    {suggestions && suggestions.length > 0 ? (
+                        suggestions.map((suggestion, i) => (
+                           <a
+                            key={i}
+                            href={`https://www.google.com/search?q=${encodeURIComponent(`${suggestion.name}, ${destination}`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-4 rounded-md border p-3 transition-colors hover:bg-muted/50"
+                           >
+                             <UtensilsCrossed className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                             <div className="flex-grow">
+                                <p className="font-semibold">{suggestion.name}</p>
+                                <p className="text-sm text-muted-foreground">{suggestion.description}</p>
+                             </div>
+                             <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                           </a>
+                        ))
+                    ) : (
                         <p className="text-center text-muted-foreground py-4">No suggestions found. Try broadening your search.</p>
                     )}
                 </div>
