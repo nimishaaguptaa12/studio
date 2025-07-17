@@ -51,7 +51,7 @@ export default function LandingPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
+      <section className="flex min-h-[calc(100vh-10rem)] items-center py-16 md:py-24 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Your Perfect Trip, <span className="text-primary">Planned by AI</span>
@@ -79,9 +79,9 @@ export default function LandingPage() {
             Planning your next journey is as simple as 1-2-3.
           </p>
         </div>
-        <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
+        <div className="mx-auto flex max-w-[64rem] flex-wrap justify-center gap-4">
           {features.map((feature, index) => (
-            <Card key={index} className="flex flex-col items-center p-6 text-center">
+            <Card key={index} className="flex flex-col items-center p-6 text-center basis-[350px]">
               <div className="mb-4 text-primary">{feature.icon}</div>
               <h3 className="mb-2 text-xl font-bold md:text-2xl">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
