@@ -1,7 +1,7 @@
 // src/components/food-finder.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -73,14 +73,6 @@ export function FoodFinder({ destination }: FoodFinderProps) {
       setIsLoading(false);
     }
   }
-
-  // Clear suggestions and search state when destination changes
-  useEffect(() => {
-    setSuggestions(null);
-    setStoredSuggestions(null);
-    form.reset();
-  }, [destination, setSuggestions, setStoredSuggestions, form]);
-
 
   return (
     <Card>
