@@ -59,7 +59,7 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
     defaultValues: {
       duration: 7,
       preferences: "A mix of cultural sights, local food experiences, and some relaxation.",
-      budget: 150,
+      budget: 12000,
     },
   });
 
@@ -132,7 +132,7 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
                 name="budget"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Daily Budget (USD)</FormLabel>
+                    <FormLabel>Daily Budget (INR)</FormLabel>
                     <FormControl>
                       <Input type="number" {...field} />
                     </FormControl>
@@ -186,7 +186,7 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
                       <div className="flex justify-between w-full pr-4">
                         <span>Day {day.day}</span>
                         <span className="text-muted-foreground">
-                          Est. ${day.estimatedCost}
+                          Est. ₹{day.estimatedCost.toLocaleString('en-IN')}
                         </span>
                       </div>
                     </AccordionTrigger>

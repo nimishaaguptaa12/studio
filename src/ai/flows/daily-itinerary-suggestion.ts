@@ -16,7 +16,7 @@ const DailyItineraryInputSchema = z.object({
   destination: z.string().describe('The destination for the trip.'),
   duration: z.number().describe('The duration of the trip in days.'),
   preferences: z.string().describe('The user preferences for activities and interests.'),
-  budget: z.number().describe('The daily budget for the itinerary.'),
+  budget: z.number().describe('The daily budget for the itinerary in INR.'),
 });
 export type DailyItineraryInput = z.infer<typeof DailyItineraryInputSchema>;
 
@@ -25,7 +25,7 @@ const DailyItineraryOutputSchema = z.object({
     z.object({
       day: z.number().describe('The day number in the itinerary.'),
       activities: z.array(z.string()).describe('A list of suggested activities for the day.'),
-      estimatedCost: z.number().describe('The estimated cost for the day in USD.'),
+      estimatedCost: z.number().describe('The estimated cost for the day in INR.'),
     })
   ).describe('A list of daily itineraries.'),
 });
@@ -44,7 +44,7 @@ const prompt = ai.definePrompt({
 
 The user has the following preferences: {{{preferences}}}.
 
-The daily budget is \${{{budget}}} USD. Make sure the estimatedCost for each day is within the budget.
+The daily budget is ₹{{{budget}}} INR. Make sure the estimatedCost for each day is within the budget.
 
 Return the itinerary as a JSON object.
 `,

@@ -75,7 +75,7 @@ export default function MyTripsPage() {
                       {trip.itinerary.map((day) => (
                         <div key={day.day} className="rounded-md border p-3">
                           <p className="font-semibold">
-                            Day {day.day} (Est. ${day.estimatedCost})
+                            Day {day.day} (Est. ₹{day.estimatedCost.toLocaleString('en-IN')})
                           </p>
                           <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
                             {day.activities.map((activity, i) => (

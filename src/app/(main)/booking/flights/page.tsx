@@ -65,30 +65,30 @@ type FlightResult = {
 const mockFlightResults: FlightResult[] = [
   {
     id: "1",
-    airline: "Delta Airlines",
-    from: "JFK",
-    to: "JTR",
-    stops: 1,
-    duration: "8h 45m",
-    price: 892,
+    airline: "IndiGo",
+    from: "DEL",
+    to: "BOM",
+    stops: 0,
+    duration: "2h 10m",
+    price: 4500,
   },
   {
     id: "2",
-    airline: "American Airlines",
-    from: "JFK",
-    to: "JTR",
-    stops: 2,
-    duration: "9h 30m",
-    price: 756,
+    airline: "Vistara",
+    from: "DEL",
+    to: "BOM",
+    stops: 0,
+    duration: "2h 15m",
+    price: 5200,
   },
   {
     id: "3",
-    airline: "Emirates",
-    from: "JFK",
-    to: "JTR",
+    airline: "Air India",
+    from: "DEL",
+    to: "BOM",
     stops: 1,
-    duration: "12h 15m",
-    price: 1245,
+    duration: "4h 30m",
+    price: 3800,
   },
 ];
 
@@ -100,7 +100,7 @@ export default function BookFlightsPage() {
     resolver: zodResolver(flightSearchSchema),
     defaultValues: {
       from: "Delhi",
-      to: "Dubai",
+      to: "Mumbai",
       passengers: "1",
       departure: new Date(),
     },
@@ -139,7 +139,7 @@ export default function BookFlightsPage() {
                     <FormItem>
                       <FormLabel>From</FormLabel>
                       <FormControl>
-                        <Input placeholder="New York (JFK)" {...field} />
+                        <Input placeholder="e.g. Delhi (DEL)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -152,7 +152,7 @@ export default function BookFlightsPage() {
                     <FormItem>
                       <FormLabel>To</FormLabel>
                       <FormControl>
-                        <Input placeholder="Santorini (JTR)" {...field} />
+                        <Input placeholder="e.g. Mumbai (BOM)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -325,7 +325,7 @@ export default function BookFlightsPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-xl font-bold mb-2">
-                          ${flight.price}
+                          ₹{flight.price.toLocaleString('en-IN')}
                         </p>
                         <Button>Select</Button>
                       </div>
