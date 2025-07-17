@@ -19,5 +19,6 @@ export interface SavedTrip {
   budget: number;
   itinerary: ItineraryDay[];
   checklist: ChecklistItem[];
+  foodSuggestions: string[];
   createdAt: string;
 }

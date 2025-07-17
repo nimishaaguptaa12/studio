@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import useLocalStorage from "@/hooks/use-local-storage";
 import { Sparkles, UtensilsCrossed } from "lucide-react";
 
 const formSchema = z.object({
@@ -39,7 +40,7 @@ type FoodFinderProps = {
 
 export function FoodFinder({ destination }: FoodFinderProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<string[] | null>(null);
+  const [suggestions, setSuggestions] = useLocalStorage<string[] | null>(`foodSuggestions-${destination}`, null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -121,6 +122,9 @@ export function FoodFinder({ destination }: FoodFinderProps) {
                             <p>{suggestion}</p>
                         </div>
                     ))}
+                    {suggestions?.length === 0 && (
+                        <p className="text-center text-muted-foreground py-4">No suggestions found. Try broadening your search.</p>
+                    )}
                 </div>
             )}
             </div>

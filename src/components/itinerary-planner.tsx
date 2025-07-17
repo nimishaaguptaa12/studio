@@ -116,12 +116,25 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
     } catch (error) {
         console.error("Could not read checklist from localStorage", error);
     }
+    
+    const foodSuggestionsKey = `foodSuggestions-${destination}`;
+    let foodSuggestions: string[] = [];
+     try {
+      const storedFoodSuggestions = localStorage.getItem(foodSuggestionsKey);
+      if (storedFoodSuggestions) {
+        foodSuggestions = JSON.parse(storedFoodSuggestions);
+      }
+    } catch (error) {
+        console.error("Could not read food suggestions from localStorage", error);
+    }
+
 
     const newTrip: SavedTrip = {
       id: new Date().toISOString(),
       destination,
       itinerary,
       checklist,
+      foodSuggestions,
       ...form.getValues(),
       createdAt: new Date().toISOString(),
     };

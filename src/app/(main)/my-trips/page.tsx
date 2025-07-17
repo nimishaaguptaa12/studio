@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2, Bookmark, CalendarDays, ListChecks, Share2, FilePenLine } from "lucide-react";
+import { Trash2, Bookmark, CalendarDays, ListChecks, Share2, FilePenLine, UtensilsCrossed } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
@@ -138,12 +138,15 @@ export default function MyTripsPage() {
                   </AccordionTrigger>
                   <AccordionContent className="p-4 pt-0">
                     <Tabs defaultValue="itinerary" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 mb-4">
+                        <TabsList className="grid w-full grid-cols-3 mb-4">
                             <TabsTrigger value="itinerary">
                                <CalendarDays className="mr-2 h-4 w-4" /> Itinerary
                             </TabsTrigger>
                             <TabsTrigger value="checklist">
                                 <ListChecks className="mr-2 h-4 w-4" /> Checklist
+                            </TabsTrigger>
+                            <TabsTrigger value="food">
+                                <UtensilsCrossed className="mr-2 h-4 w-4" /> Food
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="itinerary">
@@ -187,6 +190,20 @@ export default function MyTripsPage() {
                                     ))
                                 ) : (
                                     <p className="text-center text-muted-foreground py-4">No checklist was saved for this trip.</p>
+                                )}
+                            </div>
+                        </TabsContent>
+                         <TabsContent value="food">
+                            <div className="space-y-2">
+                                {trip.foodSuggestions && trip.foodSuggestions.length > 0 ? (
+                                    trip.foodSuggestions.map((suggestion, i) => (
+                                       <div key={i} className="flex items-center gap-3 rounded-md border p-3">
+                                            <UtensilsCrossed className="h-5 w-5 text-muted-foreground" />
+                                            <p>{suggestion}</p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-center text-muted-foreground py-4">No food suggestions were saved for this trip.</p>
                                 )}
                             </div>
                         </TabsContent>
