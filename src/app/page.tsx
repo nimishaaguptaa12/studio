@@ -52,14 +52,14 @@ export default function LandingPage() {
     <>
       {/* Hero Section */}
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
+        <div className="container flex max-w-[64rem] flex-col items-center text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Your Perfect Trip, <span className="text-primary">Planned by AI</span>
           </h1>
-          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+          <p className="mt-6 max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             Stop researching, start exploring. RoamReady is the smart travel planner that creates personalized itineraries and helps you discover your next adventure.
           </p>
-          <div className="mt-4 flex gap-4">
+          <div className="mt-8 flex gap-4">
             <Button asChild size="lg">
               <Link href="/destinations">
                 Plan Your Trip Now <ArrowRight className="ml-2 h-5 w-5" />
@@ -79,7 +79,7 @@ export default function LandingPage() {
             Planning your next journey is as simple as 1-2-3.
           </p>
         </div>
-        <div className="grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3 mx-auto">
+        <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {features.map((feature, index) => (
             <Card key={index} className="flex flex-col items-center p-6 text-center">
               <div className="mb-4 text-primary">{feature.icon}</div>
