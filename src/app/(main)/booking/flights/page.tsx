@@ -1,6 +1,7 @@
 // src/app/(main)/booking/flights/page.tsx
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,7 +23,11 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
@@ -31,6 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Plane, CalendarIcon, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,26 +52,72 @@ const flightSearchSchema = z.object({
 
 type FlightSearchFormValues = z.infer<typeof flightSearchSchema>;
 
+type FlightResult = {
+  id: string;
+  airline: string;
+  from: string;
+  to: string;
+  stops: number;
+  duration: string;
+  price: number;
+};
+
+const mockFlightResults: FlightResult[] = [
+  {
+    id: "1",
+    airline: "Delta Airlines",
+    from: "JFK",
+    to: "JTR",
+    stops: 1,
+    duration: "8h 45m",
+    price: 892,
+  },
+  {
+    id: "2",
+    airline: "American Airlines",
+    from: "JFK",
+    to: "JTR",
+    stops: 2,
+    duration: "9h 30m",
+    price: 756,
+  },
+  {
+    id: "3",
+    airline: "Emirates",
+    from: "JFK",
+    to: "JTR",
+    stops: 1,
+    duration: "12h 15m",
+    price: 1245,
+  },
+];
+
 export default function BookFlightsPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [flights, setFlights] = useState<FlightResult[]>([]);
+
   const form = useForm<FlightSearchFormValues>({
     resolver: zodResolver(flightSearchSchema),
     defaultValues: {
-      from: "",
-      to: "",
+      from: "Delhi",
+      to: "Dubai",
       passengers: "1",
+      departure: new Date(),
     },
   });
 
   function onSubmit(values: FlightSearchFormValues) {
-    // For now, we'll just log the values.
-    // In a real app, you would use these values to query a flight API.
-    const searchUrl = new URL("https://www.google.com/flights");
-    searchUrl.searchParams.set("q", `${values.from} to ${values.to} from ${format(values.departure, "yyyy-MM-dd")}${values.return ? ` to ${format(values.return, "yyyy-MM-dd")}` : ''} for ${values.passengers} passengers`);
-    window.open(searchUrl.toString(), "_blank");
+    setIsLoading(true);
+    setFlights([]);
+    // Simulate API call
+    setTimeout(() => {
+      setFlights(mockFlightResults);
+      setIsLoading(false);
+    }, 1500);
   }
 
   return (
-    <div className="container mx-auto max-w-2xl">
+    <div className="container mx-auto max-w-2xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl md:text-3xl">
@@ -139,7 +191,9 @@ export default function BookFlightsPage() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                            disabled={(date) =>
+                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            }
                             initialFocus
                           />
                         </PopoverContent>
@@ -154,7 +208,7 @@ export default function BookFlightsPage() {
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Return</FormLabel>
-                       <Popover>
+                      <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
@@ -178,7 +232,10 @@ export default function BookFlightsPage() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => date < form.getValues('departure') || date < new Date(new Date().setHours(0,0,0,0))}
+                            disabled={(date) =>
+                              date < form.getValues("departure") ||
+                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            }
                             initialFocus
                           />
                         </PopoverContent>
@@ -188,14 +245,17 @@ export default function BookFlightsPage() {
                   )}
                 />
               </div>
-              
+
               <FormField
                 control={form.control}
                 name="passengers"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Passengers</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select number of adults" />
@@ -203,7 +263,9 @@ export default function BookFlightsPage() {
                       </FormControl>
                       <SelectContent>
                         {[...Array(8)].map((_, i) => (
-                           <SelectItem key={i+1} value={`${i+1}`}>{i+1} Adult{i > 0 && 's'}</SelectItem>
+                          <SelectItem key={i + 1} value={`${i + 1}`}>
+                            {i + 1} Adult{i > 0 && "s"}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -212,13 +274,67 @@ export default function BookFlightsPage() {
                 )}
               />
 
-              <Button type="submit" size="lg" className="w-full">
-                <Search className="mr-2 h-4 w-4" /> Search Flights
+              <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+                <Search className="mr-2 h-4 w-4" />{" "}
+                {isLoading ? "Searching..." : "Search Flights"}
               </Button>
             </form>
           </Form>
         </CardContent>
       </Card>
+      
+      {(isLoading || flights.length > 0) && (
+        <div>
+          <h2 className="text-2xl font-semibold mb-4">Available Flights</h2>
+          <div className="space-y-4">
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <Card key={i} className="p-4">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-4">
+                        <Skeleton className="h-8 w-8 rounded-full" />
+                        <div className="space-y-1">
+                          <Skeleton className="h-5 w-32" />
+                          <Skeleton className="h-4 w-24" />
+                          <Skeleton className="h-4 w-20" />
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <Skeleton className="h-6 w-20 mb-2" />
+                        <Skeleton className="h-10 w-24" />
+                      </div>
+                    </div>
+                  </Card>
+                ))
+              : flights.map((flight) => (
+                  <Card key={flight.id} className="p-4">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-4">
+                         <div className="bg-primary/10 p-2 rounded-full">
+                           <Plane className="h-6 w-6 text-primary" />
+                         </div>
+                        <div>
+                          <p className="font-bold text-lg">{flight.airline}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {flight.from} → {flight.to} ({flight.stops} stop{flight.stops !== 1 && 's'})
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {flight.duration}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xl font-bold mb-2">
+                          ${flight.price}
+                        </p>
+                        <Button>Select</Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
