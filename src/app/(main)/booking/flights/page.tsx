@@ -29,8 +29,7 @@ export default function BookFlightsPage() {
         <CardContent>
           <div className="relative aspect-video w-full">
             <Image
-              src="https://placehold.co/800x400"
-              data-ai-hint="airplane sky"
+              src="https://images.unsplash.com/photo-1568952433726-38a6a3486078?q=80&w=2070&auto=format&fit=crop"
               alt="Airplane flying in a clear blue sky"
               fill
               className="rounded-lg object-cover"
