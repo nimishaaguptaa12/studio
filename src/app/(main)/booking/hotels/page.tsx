@@ -39,7 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BedDouble, CalendarIcon, Search, Star } from "lucide-react";
+import { BedDouble, CalendarIcon, Search, Star, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { suggestHotels } from "@/ai/flows/suggest-hotels";
 import { useToast } from "@/hooks/use-toast";
@@ -105,16 +105,31 @@ export default function BookHotelsPage() {
   }
   
   const handleBooking = (hotelName: string) => {
-    const { checkIn, checkOut, guests } = form.getValues();
+    const { checkIn, checkOut, guests, destination } = form.getValues();
     const checkinDate = format(checkIn, 'yyyy-MM-dd');
     const checkoutDate = format(checkOut, 'yyyy-MM-dd');
     
     const googleHotelsUrl = new URL('https://www.google.com/travel/hotels/search');
-    googleHotelsUrl.searchParams.append('q', `${hotelName}, ${form.getValues('destination')}`);
+    googleHotelsUrl.searchParams.append('q', `${hotelName}, ${destination}`);
     googleHotelsUrl.searchParams.append('checkin', checkinDate);
     googleHotelsUrl.searchParams.append('checkout', checkoutDate);
     googleHotelsUrl.searchParams.append('guests', guests);
     googleHotelsUrl.searchParams.append('hl', 'en'); // Language
+    
+    window.open(googleHotelsUrl.toString(), '_blank');
+  };
+
+  const handleMoreOptionsClick = () => {
+    const { checkIn, checkOut, guests, destination } = form.getValues();
+    const checkinDate = format(checkIn, 'yyyy-MM-dd');
+    const checkoutDate = format(checkOut, 'yyyy-MM-dd');
+
+    const googleHotelsUrl = new URL('https://www.google.com/travel/hotels/search');
+    googleHotelsUrl.searchParams.append('q', `Hotels in ${destination}`);
+    googleHotelsUrl.searchParams.append('checkin', checkinDate);
+    googleHotelsUrl.searchParams.append('checkout', checkoutDate);
+    googleHotelsUrl.searchParams.append('guests', guests);
+    googleHotelsUrl.searchParams.append('hl', 'en');
     
     window.open(googleHotelsUrl.toString(), '_blank');
   };
@@ -305,8 +320,8 @@ export default function BookHotelsPage() {
       </Card>
       
       {(isLoading || hotels.length > 0) && (
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Available Hotels</h2>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold">Available Hotels</h2>
           <div className="grid md:grid-cols-1 gap-6">
             {isLoading
               ? Array.from({ length: 3 }).map((_, i) => (
@@ -352,6 +367,16 @@ export default function BookHotelsPage() {
                 </Card>
                 ))}
           </div>
+          {!isLoading && hotels.length > 0 && (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleMoreOptionsClick}
+            >
+              View More Hotels on Google
+              <ExternalLink className="ml-2 h-4 w-4" />
+            </Button>
+          )}
         </div>
       )}
     </div>

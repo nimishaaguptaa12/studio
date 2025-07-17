@@ -37,7 +37,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plane, CalendarIcon, Search } from "lucide-react";
+import { Plane, CalendarIcon, Search, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const flightSearchSchema = z.object({
@@ -95,6 +95,7 @@ const mockFlightResults: FlightResult[] = [
 export default function BookFlightsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [flights, setFlights] = useState<FlightResult[]>([]);
+  const [searchCompleted, setSearchCompleted] = useState(false);
 
   const form = useForm<FlightSearchFormValues>({
     resolver: zodResolver(flightSearchSchema),
@@ -109,12 +110,27 @@ export default function BookFlightsPage() {
   function onSubmit(values: FlightSearchFormValues) {
     setIsLoading(true);
     setFlights([]);
+    setSearchCompleted(false);
     // Simulate API call
     setTimeout(() => {
       setFlights(mockFlightResults);
       setIsLoading(false);
+      setSearchCompleted(true);
     }, 1500);
   }
+
+  const handleMoreOptionsClick = () => {
+    const values = form.getValues();
+    const departureDate = format(values.departure, "yyyy-MM-dd");
+    const returnDate = values.return ? format(values.return, "yyyy-MM-dd") : "";
+
+    const query = `flights from ${values.from} to ${values.to} on ${departureDate}${returnDate ? ` to ${returnDate}` : ""}`;
+    
+    const googleFlightsUrl = new URL("https://www.google.com/travel/flights/search");
+    googleFlightsUrl.searchParams.append("q", query);
+    
+    window.open(googleFlightsUrl.toString(), "_blank");
+  };
 
   return (
     <div className="container mx-auto max-w-2xl space-y-8">
@@ -284,8 +300,8 @@ export default function BookFlightsPage() {
       </Card>
       
       {(isLoading || flights.length > 0) && (
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Available Flights</h2>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold">Available Flights</h2>
           <div className="space-y-4">
             {isLoading
               ? Array.from({ length: 3 }).map((_, i) => (
@@ -333,6 +349,16 @@ export default function BookFlightsPage() {
                   </Card>
                 ))}
           </div>
+           {searchCompleted && (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleMoreOptionsClick}
+            >
+              View More Flights on Google
+              <ExternalLink className="ml-2 h-4 w-4" />
+            </Button>
+          )}
         </div>
       )}
     </div>
