@@ -53,6 +53,7 @@ const hotelSearchSchema = z.object({
     required_error: "A check-out date is required.",
   }),
   guests: z.string().min(1, "Please select the number of guests."),
+  budget: z.coerce.number().positive("Budget must be a positive number.").optional(),
 }).refine(data => data.checkOut > data.checkIn, {
     message: "Check-out date must be after check-in date.",
     path: ["checkOut"],
@@ -86,7 +87,10 @@ export default function BookHotelsPage() {
     setIsLoading(true);
     setHotels([]);
     try {
-        const result = await suggestHotels({ destination: values.destination });
+        const result = await suggestHotels({ 
+            destination: values.destination,
+            budget: values.budget 
+        });
         setHotels(result.hotels);
     } catch (error) {
         console.error("Failed to suggest hotels:", error);
@@ -248,33 +252,48 @@ export default function BookHotelsPage() {
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="guests"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Guests</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="guests"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Guests</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select number of guests" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {[...Array(10)].map((_, i) => (
+                            <SelectItem key={i + 1} value={`${i + 1}`}>
+                              {i + 1} Guest{i > 0 && "s"}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="budget"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Max Budget per Night (INR)</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select number of guests" />
-                        </SelectTrigger>
+                        <Input type="number" placeholder="e.g. 8000" {...field} />
                       </FormControl>
-                      <SelectContent>
-                        {[...Array(10)].map((_, i) => (
-                          <SelectItem key={i + 1} value={`${i + 1}`}>
-                            {i + 1} Guest{i > 0 && "s"}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                 <Search className="mr-2 h-4 w-4" />{" "}
@@ -309,7 +328,7 @@ export default function BookHotelsPage() {
                         <Image
                             src={`https://placehold.co/600x400.png`}
                             alt={hotel.name}
-                            layout="fill"
+                            fill
                             objectFit="cover"
                             className="rounded-t-lg"
                             data-ai-hint="hotel exterior"

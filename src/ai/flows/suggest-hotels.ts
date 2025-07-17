@@ -12,6 +12,7 @@ import {z} from 'genkit';
 
 const SuggestHotelsInputSchema = z.object({
   destination: z.string().describe('The destination for which to suggest hotels.'),
+  budget: z.number().optional().describe('The maximum budget per night in INR.'),
 });
 export type SuggestHotelsInput = z.infer<typeof SuggestHotelsInputSchema>;
 
@@ -35,6 +36,9 @@ const prompt = ai.definePrompt({
   input: {schema: SuggestHotelsInputSchema},
   output: {schema: SuggestHotelsOutputSchema},
   prompt: `You are a travel agent. Suggest 3 to 5 hotels for a user traveling to {{destination}}.
+  {{#if budget}}
+  The user has a maximum budget of ₹{{budget}} per night. Please ensure your suggestions are at or below this price.
+  {{/if}}
   
   For each hotel, provide its name, star rating (1-5), and an estimated price per night in INR.
   
