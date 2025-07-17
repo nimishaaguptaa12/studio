@@ -133,7 +133,7 @@ export default function BookFlightsPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-2xl space-y-8">
+    <div className="container mx-auto max-w-4xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl md:text-3xl">

@@ -153,7 +153,7 @@ export default function BookHotelsPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-2xl space-y-8">
+    <div className="container mx-auto max-w-4xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl md:text-3xl">
@@ -322,7 +322,7 @@ export default function BookHotelsPage() {
       {(isLoading || hotels.length > 0) && (
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Available Hotels</h2>
-          <div className="grid md:grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {isLoading
               ? Array.from({ length: 3 }).map((_, i) => (
                   <Card key={i}>
@@ -344,7 +344,7 @@ export default function BookHotelsPage() {
                             src={`https://placehold.co/600x400.png`}
                             alt={hotel.name}
                             fill
-                            objectFit="cover"
+                            style={{objectFit: "cover"}}
                             className="rounded-t-lg"
                             data-ai-hint="hotel exterior"
                         />
