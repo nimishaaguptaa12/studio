@@ -41,6 +41,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { BedDouble, CalendarIcon, Search, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { suggestHotels } from "@/ai/flows/suggest-hotels";
+import { useToast } from "@/hooks/use-toast";
 
 const hotelSearchSchema = z.object({
   destination: z.string().min(1, "Please enter a destination."),
@@ -60,40 +62,15 @@ const hotelSearchSchema = z.object({
 type HotelSearchFormValues = z.infer<typeof hotelSearchSchema>;
 
 type HotelResult = {
-  id: string;
   name: string;
-  image: string;
   rating: number;
   pricePerNight: number;
 };
 
-const mockHotelResults: HotelResult[] = [
-  {
-    id: "1",
-    name: "The Oberoi, Mumbai",
-    image: "https://placehold.co/600x400.png",
-    rating: 5,
-    pricePerNight: 15000,
-  },
-  {
-    id: "2",
-    name: "Taj Mahal Palace, Mumbai",
-    image: "https://placehold.co/600x400.png",
-    rating: 5,
-    pricePerNight: 18000,
-  },
-  {
-    id: "3",
-    name: "Trident, Nariman Point",
-    image: "https://placehold.co/600x400.png",
-    rating: 4.5,
-    pricePerNight: 12000,
-  },
-];
-
 export default function BookHotelsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hotels, setHotels] = useState<HotelResult[]>([]);
+  const { toast } = useToast();
 
   const form = useForm<HotelSearchFormValues>({
     resolver: zodResolver(hotelSearchSchema),
@@ -105,14 +82,22 @@ export default function BookHotelsPage() {
     },
   });
 
-  function onSubmit(values: HotelSearchFormValues) {
+  async function onSubmit(values: HotelSearchFormValues) {
     setIsLoading(true);
     setHotels([]);
-    // Simulate API call
-    setTimeout(() => {
-      setHotels(mockHotelResults);
-      setIsLoading(false);
-    }, 1500);
+    try {
+        const result = await suggestHotels({ destination: values.destination });
+        setHotels(result.hotels);
+    } catch (error) {
+        console.error("Failed to suggest hotels:", error);
+        toast({
+            title: "Error",
+            description: "Could not fetch hotel suggestions. Please try again.",
+            variant: "destructive",
+        });
+    } finally {
+        setIsLoading(false);
+    }
   }
   
   const handleBooking = (hotelName: string) => {
@@ -132,14 +117,18 @@ export default function BookHotelsPage() {
   
   const renderStars = (rating: number) => {
     const stars = [];
-    for (let i = 1; i <= 5; i++) {
-        if (i <= rating) {
-            stars.push(<Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />);
-        } else if (i - 0.5 <= rating) {
-            stars.push(<Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" style={{ clipPath: 'inset(0 50% 0 0)' }} />);
-        } else {
-            stars.push(<Star key={i} className="h-5 w-5 text-gray-300" />);
-        }
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+    for (let i = 0; i < fullStars; i++) {
+        stars.push(<Star key={`full-${i}`} className="h-5 w-5 fill-yellow-400 text-yellow-400" />);
+    }
+    if (halfStar) {
+        stars.push(<Star key="half" className="h-5 w-5 fill-yellow-400 text-yellow-400" style={{ clipPath: 'inset(0 50% 0 0)' }} />);
+    }
+    for (let i = 0; i < emptyStars; i++) {
+        stars.push(<Star key={`empty-${i}`} className="h-5 w-5 text-gray-300" />);
     }
     return <div className="flex">{stars}</div>;
   }
@@ -315,10 +304,10 @@ export default function BookHotelsPage() {
                   </Card>
                 ))
               : hotels.map((hotel) => (
-                <Card key={hotel.id}>
+                <Card key={hotel.name}>
                     <div className="relative h-48 w-full">
                         <Image
-                            src={hotel.image}
+                            src={`https://placehold.co/600x400.png`}
                             alt={hotel.name}
                             layout="fill"
                             objectFit="cover"
