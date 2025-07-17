@@ -33,7 +33,7 @@ export default function BookHotelsPage() {
             alt="Modern hotel room with a view"
             width={800}
             height={400}
-            className="rounded-lg object-cover"
+            className="rounded-lg object-cover w-full h-auto"
           />
         </CardContent>
         <CardFooter>
