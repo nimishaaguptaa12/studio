@@ -33,7 +33,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import useLocalStorage from "@/hooks/use-local-storage";
-import type { ItineraryDay, SavedTrip, ChecklistItem } from "@/types";
+import type { ItineraryDay, SavedTrip, ChecklistItem, RestaurantSuggestion } from "@/types";
 import { Bookmark, Sparkles } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
@@ -118,7 +118,7 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
     }
     
     const foodSuggestionsKey = `foodSuggestions-${destination}`;
-    let foodSuggestions: string[] = [];
+    let foodSuggestions: RestaurantSuggestion[] = [];
      try {
       const storedFoodSuggestions = localStorage.getItem(foodSuggestionsKey);
       if (storedFoodSuggestions) {

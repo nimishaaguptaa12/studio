@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2, Bookmark, CalendarDays, ListChecks, Share2, FilePenLine, UtensilsCrossed } from "lucide-react";
+import { Trash2, Bookmark, CalendarDays, ListChecks, Share2, FilePenLine, UtensilsCrossed, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
@@ -194,13 +194,23 @@ export default function MyTripsPage() {
                             </div>
                         </TabsContent>
                          <TabsContent value="food">
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                                 {trip.foodSuggestions && trip.foodSuggestions.length > 0 ? (
                                     trip.foodSuggestions.map((suggestion, i) => (
-                                       <div key={i} className="flex items-center gap-3 rounded-md border p-3">
-                                            <UtensilsCrossed className="h-5 w-5 text-muted-foreground" />
-                                            <p>{suggestion}</p>
+                                       <a
+                                        key={i}
+                                        href={`https://www.google.com/search?q=${encodeURIComponent(`${suggestion.name}, ${trip.destination}`)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-4 rounded-md border p-3 transition-colors hover:bg-muted/50"
+                                    >
+                                        <UtensilsCrossed className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                                        <div className="flex-grow">
+                                            <p className="font-semibold">{suggestion.name}</p>
+                                            <p className="text-sm text-muted-foreground">{suggestion.description}</p>
                                         </div>
+                                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                                       </a>
                                     ))
                                 ) : (
                                     <p className="text-center text-muted-foreground py-4">No food suggestions were saved for this trip.</p>

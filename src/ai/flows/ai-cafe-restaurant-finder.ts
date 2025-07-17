@@ -16,8 +16,15 @@ const SuggestCafeRestaurantInputSchema = z.object({
 });
 export type SuggestCafeRestaurantInput = z.infer<typeof SuggestCafeRestaurantInputSchema>;
 
+const RestaurantSuggestionSchema = z.object({
+    name: z.string().describe("The name of the cafe or restaurant."),
+    description: z.string().describe("A brief, one-sentence description of the place, including its vibe, specialties, or what makes it unique."),
+});
+export type RestaurantSuggestion = z.infer<typeof RestaurantSuggestionSchema>;
+
+
 const SuggestCafeRestaurantOutputSchema = z.object({
-  suggestions: z.array(z.string()).describe('An array of cafe and restaurant suggestions.'),
+  suggestions: z.array(RestaurantSuggestionSchema).describe('An array of 3-5 cafe and restaurant suggestions.'),
 });
 export type SuggestCafeRestaurantOutput = z.infer<typeof SuggestCafeRestaurantOutputSchema>;
 
@@ -29,9 +36,11 @@ const prompt = ai.definePrompt({
   name: 'suggestCafeRestaurantPrompt',
   input: {schema: SuggestCafeRestaurantInputSchema},
   output: {schema: SuggestCafeRestaurantOutputSchema},
-  prompt: `Suggest cafes and restaurants in {{destination}}.{{#if preferences}} Consider the following preferences: {{preferences}}.{{/if}}
+  prompt: `Suggest 3 to 5 cafes and restaurants in {{destination}}.
+  {{#if preferences}} Consider the following preferences: {{preferences}}.{{/if}}
 
-  Return an array of suggestions.`, 
+  For each suggestion, provide the name and a brief, one-sentence description.
+  Return the suggestions as a JSON object with a 'suggestions' array.`,
 });
 
 const suggestCafeRestaurantFlow = ai.defineFlow(

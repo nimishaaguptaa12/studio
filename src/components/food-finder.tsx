@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { suggestCafeRestaurant } from "@/ai/flows/ai-cafe-restaurant-finder";
+import { suggestCafeRestaurant, type RestaurantSuggestion } from "@/ai/flows/ai-cafe-restaurant-finder";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import useLocalStorage from "@/hooks/use-local-storage";
-import { Sparkles, UtensilsCrossed } from "lucide-react";
+import { Sparkles, UtensilsCrossed, ExternalLink } from "lucide-react";
 
 const formSchema = z.object({
   preferences: z.string().optional(),
@@ -40,7 +40,7 @@ type FoodFinderProps = {
 
 export function FoodFinder({ destination }: FoodFinderProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useLocalStorage<string[] | null>(`foodSuggestions-${destination}`, null);
+  const [suggestions, setSuggestions] = useLocalStorage<RestaurantSuggestion[] | null>(`foodSuggestions-${destination}`, null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -109,18 +109,34 @@ export function FoodFinder({ destination }: FoodFinderProps) {
             <div className="mt-6">
             <h3 className="text-xl font-bold mb-4">Recommendations</h3>
              {isLoading ? (
-                <div className="space-y-2">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
+                <div className="space-y-3">
+                    {[...Array(3)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-4 rounded-md border p-3">
+                             <Skeleton className="h-5 w-5 rounded-full" />
+                             <div className="flex-grow space-y-2">
+                                <Skeleton className="h-4 w-1/2" />
+                                <Skeleton className="h-4 w-3/4" />
+                             </div>
+                        </div>
+                    ))}
                 </div>
                 ) : (
                 <div className="space-y-3">
                     {suggestions?.map((suggestion, i) => (
-                        <div key={i} className="flex items-center gap-3 rounded-md border p-3">
-                            <UtensilsCrossed className="h-5 w-5 text-muted-foreground" />
-                            <p>{suggestion}</p>
-                        </div>
+                       <a
+                        key={i}
+                        href={`https://www.google.com/search?q=${encodeURIComponent(`${suggestion.name}, ${destination}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-4 rounded-md border p-3 transition-colors hover:bg-muted/50"
+                       >
+                         <UtensilsCrossed className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                         <div className="flex-grow">
+                            <p className="font-semibold">{suggestion.name}</p>
+                            <p className="text-sm text-muted-foreground">{suggestion.description}</p>
+                         </div>
+                         <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                       </a>
                     ))}
                     {suggestions?.length === 0 && (
                         <p className="text-center text-muted-foreground py-4">No suggestions found. Try broadening your search.</p>

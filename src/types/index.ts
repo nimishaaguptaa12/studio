@@ -11,6 +11,11 @@ export type ChecklistItem = {
     completed: boolean;
 };
 
+export type RestaurantSuggestion = {
+  name: string;
+  description: string;
+};
+
 export interface SavedTrip {
   id: string; // e.g., a timestamp or a unique hash
   destination: string;
@@ -19,6 +24,6 @@ export interface SavedTrip {
   budget: number;
   itinerary: ItineraryDay[];
   checklist: ChecklistItem[];
-  foodSuggestions: string[];
+  foodSuggestions: RestaurantSuggestion[];
   createdAt: string;
 }
