@@ -62,35 +62,21 @@ type FlightResult = {
   price: number;
 };
 
-const mockFlightResults: FlightResult[] = [
-  {
-    id: "1",
-    airline: "IndiGo",
-    from: "DEL",
-    to: "BOM",
-    stops: 0,
-    duration: "2h 10m",
-    price: 4500,
-  },
-  {
-    id: "2",
-    airline: "Vistara",
-    from: "DEL",
-    to: "BOM",
-    stops: 0,
-    duration: "2h 15m",
-    price: 5200,
-  },
-  {
-    id: "3",
-    airline: "Air India",
-    from: "DEL",
-    to: "BOM",
-    stops: 1,
-    duration: "4h 30m",
-    price: 3800,
-  },
-];
+const generateMockFlights = (from: string, to: string): FlightResult[] => {
+    const airlines = ["IndiGo", "Vistara", "Air India", "SpiceJet", "Emirates"];
+    const fromCode = from.substring(0, 3).toUpperCase();
+    const toCode = to.substring(0, 3).toUpperCase();
+  
+    return airlines.slice(0, 3).map((airline, index) => ({
+      id: `${index + 1}`,
+      airline,
+      from: fromCode,
+      to: toCode,
+      stops: Math.floor(Math.random() * 2),
+      duration: `${Math.floor(Math.random() * 5) + 2}h ${Math.floor(Math.random() * 60)}m`,
+      price: Math.floor(Math.random() * 5000) + 3000,
+    }));
+  };
 
 export default function BookFlightsPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -100,10 +86,9 @@ export default function BookFlightsPage() {
   const form = useForm<FlightSearchFormValues>({
     resolver: zodResolver(flightSearchSchema),
     defaultValues: {
-      from: "Delhi",
-      to: "Mumbai",
+      from: "",
+      to: "",
       passengers: "1",
-      departure: new Date(),
     },
   });
 
@@ -113,7 +98,8 @@ export default function BookFlightsPage() {
     setSearchCompleted(false);
     // Simulate API call
     setTimeout(() => {
-      setFlights(mockFlightResults);
+      const mockFlights = generateMockFlights(values.from, values.to);
+      setFlights(mockFlights);
       setIsLoading(false);
       setSearchCompleted(true);
     }, 1500);
@@ -121,6 +107,7 @@ export default function BookFlightsPage() {
 
   const handleMoreOptionsClick = () => {
     const values = form.getValues();
+    if (!values.departure) return;
     const departureDate = format(values.departure, "yyyy-MM-dd");
     const returnDate = values.return ? format(values.return, "yyyy-MM-dd") : "";
 
@@ -168,7 +155,7 @@ export default function BookFlightsPage() {
                     <FormItem>
                       <FormLabel>To</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Mumbai (BOM)" {...field} />
+                        <Input placeholder="e.g. Dubai (DXB)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -249,7 +236,7 @@ export default function BookFlightsPage() {
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={(date) =>
-                              date < form.getValues("departure") ||
+                              date < (form.getValues("departure") || new Date()) ||
                               date < new Date(new Date().setHours(0, 0, 0, 0))
                             }
                             initialFocus
