@@ -51,15 +51,15 @@ export default function LandingPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
-        <div className="container flex max-w-[64rem] flex-col items-center text-center">
+      <section className="pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
+        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Your Perfect Trip, <span className="text-primary">Planned by AI</span>
           </h1>
-          <p className="mt-6 max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             Stop researching, start exploring. RoamReady is the smart travel planner that creates personalized itineraries and helps you discover your next adventure.
           </p>
-          <div className="mt-8 flex gap-4">
+          <div className="mt-4 flex gap-4">
             <Button asChild size="lg">
               <Link href="/destinations">
                 Plan Your Trip Now <ArrowRight className="ml-2 h-5 w-5" />
