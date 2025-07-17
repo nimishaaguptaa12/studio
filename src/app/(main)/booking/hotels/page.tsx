@@ -41,6 +41,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { BedDouble, CalendarIcon, Search, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 const hotelSearchSchema = z.object({
   destination: z.string().min(1, "Please enter a destination."),
@@ -94,6 +95,7 @@ const mockHotelResults: HotelResult[] = [
 export default function BookHotelsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hotels, setHotels] = useState<HotelResult[]>([]);
+  const { toast } = useToast();
 
   const form = useForm<HotelSearchFormValues>({
     resolver: zodResolver(hotelSearchSchema),
@@ -114,6 +116,13 @@ export default function BookHotelsPage() {
       setIsLoading(false);
     }, 1500);
   }
+  
+  const handleBooking = () => {
+    toast({
+      title: "Coming Soon!",
+      description: "Hotel booking functionality is not yet implemented.",
+    });
+  };
   
   const renderStars = (rating: number) => {
     const stars = [];
@@ -324,7 +333,7 @@ export default function BookHotelsPage() {
                         </p>
                     </CardContent>
                     <CardFooter>
-                        <Button className="w-full">Book Now</Button>
+                        <Button className="w-full" onClick={handleBooking}>Book Now</Button>
                     </CardFooter>
                 </Card>
                 ))}
