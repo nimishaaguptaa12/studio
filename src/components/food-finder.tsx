@@ -53,8 +53,8 @@ export function FoodFinder({ destination }: FoodFinderProps) {
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
+    setSuggestions(null); // Clear previous suggestions
     setHasSearched(true);
-    setSuggestions(null);
     try {
       const result = await suggestCafeRestaurant({
         destination,
@@ -68,12 +68,13 @@ export function FoodFinder({ destination }: FoodFinderProps) {
         description: "Failed to find restaurants. Please try again.",
         variant: "destructive",
       });
+      setSuggestions([]); // Set to empty array on error to show message
     } finally {
       setIsLoading(false);
     }
   }
 
-  // Clear suggestions when destination changes
+  // Clear suggestions and search state when destination changes
   useEffect(() => {
     setSuggestions(null);
     setHasSearched(false);
