@@ -41,7 +41,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { BedDouble, CalendarIcon, Search, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
 
 const hotelSearchSchema = z.object({
   destination: z.string().min(1, "Please enter a destination."),
@@ -95,7 +94,6 @@ const mockHotelResults: HotelResult[] = [
 export default function BookHotelsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hotels, setHotels] = useState<HotelResult[]>([]);
-  const { toast } = useToast();
 
   const form = useForm<HotelSearchFormValues>({
     resolver: zodResolver(hotelSearchSchema),
@@ -117,11 +115,19 @@ export default function BookHotelsPage() {
     }, 1500);
   }
   
-  const handleBooking = () => {
-    toast({
-      title: "Coming Soon!",
-      description: "Hotel booking functionality is not yet implemented.",
-    });
+  const handleBooking = (hotelName: string) => {
+    const { checkIn, checkOut, guests } = form.getValues();
+    const checkinDate = format(checkIn, 'yyyy-MM-dd');
+    const checkoutDate = format(checkOut, 'yyyy-MM-dd');
+    
+    const googleHotelsUrl = new URL('https://www.google.com/travel/hotels/search');
+    googleHotelsUrl.searchParams.append('q', `${hotelName}, ${form.getValues('destination')}`);
+    googleHotelsUrl.searchParams.append('checkin', checkinDate);
+    googleHotelsUrl.searchParams.append('checkout', checkoutDate);
+    googleHotelsUrl.searchParams.append('guests', guests);
+    googleHotelsUrl.searchParams.append('hl', 'en'); // Language
+    
+    window.open(googleHotelsUrl.toString(), '_blank');
   };
   
   const renderStars = (rating: number) => {
@@ -333,7 +339,7 @@ export default function BookHotelsPage() {
                         </p>
                     </CardContent>
                     <CardFooter>
-                        <Button className="w-full" onClick={handleBooking}>Book Now</Button>
+                        <Button className="w-full" onClick={() => handleBooking(hotel.name)}>Book Now</Button>
                     </CardFooter>
                 </Card>
                 ))}
