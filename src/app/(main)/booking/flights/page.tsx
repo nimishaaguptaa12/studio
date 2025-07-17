@@ -28,9 +28,9 @@ export default function BookFlightsPage() {
         </CardHeader>
         <CardContent>
           <Image
-            src="https://placehold.co/800x400.png"
-            data-ai-hint="airplane travel"
-            alt="Airplane flying over clouds"
+            src="/app/(main)/booking/flights/flight-image.jpg"
+            data-ai-hint="airplane sky"
+            alt="Airplane flying in a clear blue sky"
             width={800}
             height={400}
             className="rounded-lg object-cover"
