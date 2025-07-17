@@ -40,8 +40,8 @@ type FoodFinderProps = {
 
 export function FoodFinder({ destination }: FoodFinderProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useLocalStorage<RestaurantSuggestion[] | null>(`foodSuggestions-${destination}`, null);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [suggestions, setSuggestions] = useState<RestaurantSuggestion[] | null>(null);
+  const [, setStoredSuggestions] = useLocalStorage<RestaurantSuggestion[] | null>(`foodSuggestions-${destination}`, null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -53,7 +53,6 @@ export function FoodFinder({ destination }: FoodFinderProps) {
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
-    setHasSearched(true);
     setSuggestions(null); // Clear previous suggestions
     try {
       const result = await suggestCafeRestaurant({
@@ -61,6 +60,7 @@ export function FoodFinder({ destination }: FoodFinderProps) {
         preferences: values.preferences,
       });
       setSuggestions(result.suggestions);
+      setStoredSuggestions(result.suggestions); // Save to local storage for the trip saving feature
     } catch (error) {
       console.error(error);
       toast({
@@ -77,9 +77,9 @@ export function FoodFinder({ destination }: FoodFinderProps) {
   // Clear suggestions and search state when destination changes
   useEffect(() => {
     setSuggestions(null);
-    setHasSearched(false);
+    setStoredSuggestions(null);
     form.reset();
-  }, [destination, setSuggestions, form]);
+  }, [destination, setSuggestions, setStoredSuggestions, form]);
 
 
   return (
@@ -116,7 +116,7 @@ export function FoodFinder({ destination }: FoodFinderProps) {
           </form>
         </Form>
         
-        {(isLoading || (hasSearched && suggestions)) && (
+        {(isLoading || suggestions) && (
             <div className="mt-6">
             <h3 className="text-xl font-bold mb-4">Recommendations</h3>
              {isLoading ? (
