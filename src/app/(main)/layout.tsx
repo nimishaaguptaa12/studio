@@ -29,7 +29,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const menuItems = [
-    { href: "/", label: "Destination Finder", icon: Map },
+    { href: "/destinations", label: "Destination Finder", icon: Map },
     { href: "/itinerary", label: "Itinerary Planner", icon: CalendarDays },
     { href: "/my-trips", label: "My Saved Trips", icon: Bookmark },
   ];
@@ -43,7 +43,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -81,7 +83,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:hidden">
           <SidebarTrigger />
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold">RoamReady</h1>
+            <Link href="/">
+              <h1 className="text-xl font-bold">RoamReady</h1>
+            </Link>
           </div>
         </header>
         <main className="flex-1 overflow-auto p-4 md:p-8">{children}</main>
