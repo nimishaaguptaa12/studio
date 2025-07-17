@@ -27,14 +27,13 @@ export default function BookFlightsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="relative aspect-video w-full">
-            <Image
-              src="https://images.unsplash.com/photo-1568952433726-38a6a3486078?q=80&w=2070&auto=format&fit=crop"
-              alt="Airplane flying in a clear blue sky"
-              fill
-              className="rounded-lg object-cover"
-            />
-          </div>
+          <Image
+            src="https://images.unsplash.com/photo-1568952433726-38a6a3486078?q=80&w=2070&auto=format&fit=crop"
+            alt="Airplane flying in a clear blue sky"
+            width={800}
+            height={400}
+            className="rounded-lg object-cover w-full h-auto"
+          />
         </CardContent>
         <CardFooter>
           <Button asChild size="lg">
