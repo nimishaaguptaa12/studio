@@ -1,7 +1,7 @@
 // src/components/itinerary-planner.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -35,6 +35,7 @@ import { useToast } from "@/hooks/use-toast";
 import useLocalStorage from "@/hooks/use-local-storage";
 import type { ItineraryDay, SavedTrip, ChecklistItem } from "@/types";
 import { Bookmark, Sparkles } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   duration: z.coerce.number().min(1).max(30),
@@ -53,6 +54,7 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
   const [itinerary, setItinerary] = useState<ItineraryDay[] | null>(null);
   const [savedTrips, setSavedTrips] = useLocalStorage<SavedTrip[]>("savedTrips", []);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -62,6 +64,23 @@ export function ItineraryPlanner({ destination }: ItineraryPlannerProps) {
       budget: 12000,
     },
   });
+
+  useEffect(() => {
+    const duration = searchParams.get('duration');
+    const budget = searchParams.get('budget');
+    const preferences = searchParams.get('preferences');
+
+    if (duration) {
+      form.setValue('duration', parseInt(duration, 10));
+    }
+    if (budget) {
+      form.setValue('budget', parseInt(budget, 10));
+    }
+    if (preferences) {
+      form.setValue('preferences', preferences);
+    }
+  }, [searchParams, form]);
+
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);

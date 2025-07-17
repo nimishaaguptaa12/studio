@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2, Bookmark, CalendarDays, ListChecks, Share2 } from "lucide-react";
+import { Trash2, Bookmark, CalendarDays, ListChecks, Share2, FilePenLine } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
@@ -192,7 +192,12 @@ export default function MyTripsPage() {
                         </TabsContent>
                     </Tabs>
                     
-                    <div className="flex items-center gap-2 mt-4">
+                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                        <Button variant="outline" size="sm" asChild>
+                           <Link href={`/itinerary?destination=${encodeURIComponent(trip.destination)}&duration=${trip.duration}&budget=${trip.budget}&preferences=${encodeURIComponent(trip.preferences)}`}>
+                             <FilePenLine className="mr-2 h-4 w-4" /> Resume Planning
+                           </Link>
+                        </Button>
                         <Button
                             variant="outline"
                             size="sm"
