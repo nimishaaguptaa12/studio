@@ -53,8 +53,8 @@ export function FoodFinder({ destination }: FoodFinderProps) {
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
-    setSuggestions(null); // Clear previous suggestions
     setHasSearched(true);
+    setSuggestions(null); // Clear previous suggestions
     try {
       const result = await suggestCafeRestaurant({
         destination,
