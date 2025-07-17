@@ -27,14 +27,7 @@ export default function BookHotelsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Image
-            src="https://placehold.co/800x400"
-            data-ai-hint="hotel luxury"
-            alt="Modern hotel room with a view"
-            width={800}
-            height={400}
-            className="rounded-lg object-cover w-full h-auto"
-          />
+          {/* Image removed as per request */}
         </CardContent>
         <CardFooter>
           <Button asChild size="lg">
