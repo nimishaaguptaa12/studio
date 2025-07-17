@@ -27,14 +27,15 @@ export default function BookFlightsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Image
-            src="/app/(main)/booking/flights/flight-image.jpg"
-            data-ai-hint="airplane sky"
-            alt="Airplane flying in a clear blue sky"
-            width={800}
-            height={400}
-            className="rounded-lg object-cover"
-          />
+          <div className="relative aspect-video w-full">
+            <Image
+              src="https://placehold.co/800x400"
+              data-ai-hint="airplane sky"
+              alt="Airplane flying in a clear blue sky"
+              fill
+              className="rounded-lg object-cover"
+            />
+          </div>
         </CardContent>
         <CardFooter>
           <Button asChild size="lg">
