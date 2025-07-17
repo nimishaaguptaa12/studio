@@ -71,21 +71,21 @@ const mockHotelResults: HotelResult[] = [
   {
     id: "1",
     name: "The Oberoi, Mumbai",
-    image: "https://placehold.co/600x400.png",
+    image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=600",
     rating: 5,
     pricePerNight: 15000,
   },
   {
     id: "2",
     name: "Taj Mahal Palace, Mumbai",
-    image: "https://placehold.co/600x400.png",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600",
     rating: 5,
     pricePerNight: 18000,
   },
   {
     id: "3",
     name: "Trident, Nariman Point",
-    image: "https://placehold.co/600x400.png",
+    image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=600",
     rating: 4.5,
     pricePerNight: 12000,
   },
@@ -284,7 +284,7 @@ export default function BookHotelsPage() {
       {(isLoading || hotels.length > 0) && (
         <div>
           <h2 className="text-2xl font-semibold mb-4">Available Hotels</h2>
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-1 gap-6">
             {isLoading
               ? Array.from({ length: 3 }).map((_, i) => (
                   <Card key={i}>
