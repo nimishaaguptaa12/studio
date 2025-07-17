@@ -45,7 +45,7 @@ function ItineraryPageContent() {
           <FoodFinder destination={destination} />
         </TabsContent>
         <TabsContent value="checklist" className="mt-4">
-          <Checklist />
+          <Checklist destination={destination} />
         </TabsContent>
       </Tabs>
     </div>
